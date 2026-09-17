@@ -4,15 +4,15 @@ import { Presentation } from 'lucide-react'
 import { z } from "zod";
 
 export const Route = createFileRoute('/_auth/login')({
-    validateSearch:z.object({
-        redirect:z.string().optional()
+    validateSearch: z.object({
+        redirect: z.string().optional()
     }),
     component: LoginPage,
 })
 
 function LoginPage() {
 
-    const {redirect} = Route.useSearch()
+    const { redirect } = Route.useSearch()
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4">
@@ -27,7 +27,9 @@ function LoginPage() {
                         </Link>
                         <div className="text-center">
                             <h1 className="text-2xl font-bold">
-                                Welcome to <span className="text-primary">Neon.ai</span>
+                                Welcome to <span className="font-semibold text-lg text-foreground">
+                                    Neon<span className="text-primary">.ai</span>
+                                </span>
                             </h1>
                             <p className="text-muted-foreground text-sm mt-1">
                                 Sign in to create beautiful presentations
