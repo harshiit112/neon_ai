@@ -11,6 +11,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
+import { Toaster } from '#/components/ui/toast'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -44,22 +45,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <Scripts /> 
         <HeadContent />
       </head>
-      <body>
+      <body className="font-sans antialiased">
+        
         {children}
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
+        <Toaster />
         <Scripts />
       </body>
     </html>
