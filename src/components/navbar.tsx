@@ -58,7 +58,7 @@ export default function Navbar() {
                             <Presentation className="size-5 text-primary-foreground" />
                         </div>
                         <span className="font-semibold text-lg text-foreground">
-                            Neon<span className="text-primary">.ai</span>
+                            neon<span className="text-primary">.ai</span>
                         </span>
                     </Link>
 
