@@ -42,3 +42,13 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Presentation
+ * 
+ */
+export type Presentation = Prisma.PresentationModel
+/**
+ * Model Slide
+ * 
+ */
+export type Slide = Prisma.SlideModel

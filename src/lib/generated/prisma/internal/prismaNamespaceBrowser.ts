@@ -55,7 +55,9 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Presentation: 'Presentation',
+  Slide: 'Slide'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -138,6 +140,38 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const PresentationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  prompt: 'prompt',
+  style: 'style',
+  tone: 'tone',
+  layout: 'layout',
+  status: 'status',
+  createAt: 'createAt',
+  updateAt: 'updateAt'
+} as const
+
+export type PresentationScalarFieldEnum = (typeof PresentationScalarFieldEnum)[keyof typeof PresentationScalarFieldEnum]
+
+
+export const SlideScalarFieldEnum = {
+  id: 'id',
+  presentationId: 'presentationId',
+  order: 'order',
+  title: 'title',
+  content: 'content',
+  notes: 'notes',
+  imageUrl: 'imageUrl',
+  imagePrompt: 'imagePrompt',
+  createAt: 'createAt',
+  updateAt: 'updateAt'
+} as const
+
+export type SlideScalarFieldEnum = (typeof SlideScalarFieldEnum)[keyof typeof SlideScalarFieldEnum]
 
 
 export const SortOrder = {

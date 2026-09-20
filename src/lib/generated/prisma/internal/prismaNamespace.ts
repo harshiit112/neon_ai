@@ -401,7 +401,9 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Presentation: 'Presentation',
+  Slide: 'Slide'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "test" | "user" | "session" | "account" | "verification"
+    modelProps: "test" | "user" | "session" | "account" | "verification" | "presentation" | "slide"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -791,6 +793,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Presentation: {
+      payload: Prisma.$PresentationPayload<ExtArgs>
+      fields: Prisma.PresentationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PresentationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PresentationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>
+        }
+        findFirst: {
+          args: Prisma.PresentationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PresentationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>
+        }
+        findMany: {
+          args: Prisma.PresentationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>[]
+        }
+        create: {
+          args: Prisma.PresentationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>
+        }
+        createMany: {
+          args: Prisma.PresentationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PresentationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>[]
+        }
+        delete: {
+          args: Prisma.PresentationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>
+        }
+        update: {
+          args: Prisma.PresentationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>
+        }
+        deleteMany: {
+          args: Prisma.PresentationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PresentationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PresentationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>[]
+        }
+        upsert: {
+          args: Prisma.PresentationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresentationPayload>
+        }
+        aggregate: {
+          args: Prisma.PresentationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePresentation>
+        }
+        groupBy: {
+          args: Prisma.PresentationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PresentationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PresentationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PresentationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Slide: {
+      payload: Prisma.$SlidePayload<ExtArgs>
+      fields: Prisma.SlideFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SlideFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SlideFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>
+        }
+        findFirst: {
+          args: Prisma.SlideFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SlideFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>
+        }
+        findMany: {
+          args: Prisma.SlideFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>[]
+        }
+        create: {
+          args: Prisma.SlideCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>
+        }
+        createMany: {
+          args: Prisma.SlideCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SlideCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>[]
+        }
+        delete: {
+          args: Prisma.SlideDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>
+        }
+        update: {
+          args: Prisma.SlideUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>
+        }
+        deleteMany: {
+          args: Prisma.SlideDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SlideUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SlideUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>[]
+        }
+        upsert: {
+          args: Prisma.SlideUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SlidePayload>
+        }
+        aggregate: {
+          args: Prisma.SlideAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSlide>
+        }
+        groupBy: {
+          args: Prisma.SlideGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SlideGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SlideCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SlideCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -896,6 +1046,38 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const PresentationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  prompt: 'prompt',
+  style: 'style',
+  tone: 'tone',
+  layout: 'layout',
+  status: 'status',
+  createAt: 'createAt',
+  updateAt: 'updateAt'
+} as const
+
+export type PresentationScalarFieldEnum = (typeof PresentationScalarFieldEnum)[keyof typeof PresentationScalarFieldEnum]
+
+
+export const SlideScalarFieldEnum = {
+  id: 'id',
+  presentationId: 'presentationId',
+  order: 'order',
+  title: 'title',
+  content: 'content',
+  notes: 'notes',
+  imageUrl: 'imageUrl',
+  imagePrompt: 'imagePrompt',
+  createAt: 'createAt',
+  updateAt: 'updateAt'
+} as const
+
+export type SlideScalarFieldEnum = (typeof SlideScalarFieldEnum)[keyof typeof SlideScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -962,6 +1144,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'PresentationStatus'
+ */
+export type EnumPresentationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresentationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PresentationStatus[]'
+ */
+export type ListEnumPresentationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresentationStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -972,6 +1168,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1130,6 +1340,8 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  presentation?: Prisma.PresentationOmit
+  slide?: Prisma.SlideOmit
 }
 
 /* Types for Logging */
