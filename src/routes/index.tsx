@@ -3,13 +3,17 @@ import { Label } from '#/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#/components/ui/select';
 import { Slider } from '#/components/ui/slider';
 import { Textarea } from '#/components/ui/textarea';
+import { createPresentation } from '#/features/presentation/actions/presentation-mutation';
 import { LAYOUT_OPTIONS, SLIDE_STYLES, TONE_OPTIONS } from '#/features/presentation/constant/presentation-options';
 import { PRESENTATION_TEMPLATES } from '#/features/presentation/constant/presentation-template';
+import { presentationQueryKeys } from '#/features/presentation/hooks/query-keys';
 import { getSession } from '#/lib/auth.functions'
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { Wand2 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 
 type HomeFormState = {
@@ -38,14 +42,46 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     content: '',
-    sildeCount: 8,
+    slideCount: 8,
     style: 'minimal',
     tone: 'formal',
     layout: 'balanced',
   })
+
+  const createMut = useMutation({
+    mutationFn: () => createPresentation({
+      data: {
+        prompt: form.content.trim(),
+        slideCount: form.slideCount,
+        style: form.style,
+        tone: form.tone,
+        layout: form.layout,
+      },
+    }),
+    onSuccess: (presentation) => {
+      toast.success("Presentation Created");
+      queryClient.invalidateQueries({ queryKey: presentationQueryKeys.list() })
+      navigate({
+        to: "/presentations/$presentationId",
+        params: { presentationId: presentation.id },
+      })
+    },
+    onError: (error) => {
+      toast.error("Could not create presentation")
+    },
+  })
+
+  const handleCreate = () => {
+    if (!form.content.trim()) {
+      toast.error("Please enter your content first");
+      return;
+    }
+    createMut.mutate();
+  }
 
   return (
     <main className="min-h-screen pt-24 pb-12 px-4">
@@ -88,14 +124,14 @@ function Home() {
             {/* Slide count */}
             <div className="space-y-2.5">
               <Label className="text-sm font-medium">
-                Slides: {form.sildeCount}
+                Slides: {form.slideCount}
               </Label>
               <Slider
-                value={[form.sildeCount]}
+                value={[form.slideCount]}
                 onValueChange={(value) =>
                   setForm((s) => ({
                     ...s,
-                    sildeCount: Array.isArray(value) ? value[0] : value,
+                    slideCount: Array.isArray(value) ? value[0] : value,
                   }))
                 }
                 min={3}
@@ -185,7 +221,8 @@ function Home() {
           <div className="flex justify-end pt-2">
             <Button
               size="lg"
-              onClick={() => { }}
+              onClick={handleCreate}
+              disabled={createMut.isPending || !form.content.trim()}
               className="rounded-xl px-8 gap-2 font-semibold"
             >
               <Wand2 className="size-5" />
@@ -207,7 +244,7 @@ function Home() {
                 onClick={() => {
                   setForm({
                     content: template.content,
-                    sildeCount: template.slides,
+                    slideCount: template.slides,
                     style: template.style,
                     tone: template.tone,
                     layout: template.layout,

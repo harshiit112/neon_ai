@@ -6,7 +6,7 @@ import { prisma } from "#/lib/db";
 import { PresentationStatus } from "#/lib/generated/prisma/enums";
 
 export const createPresentation = createServerFn({ method: "POST" })
-    .inputValidator((data: unknown) => createPresentationInputSchema.parse(data))
+    .validator((data: unknown) => createPresentationInputSchema.parse(data))
     .middleware([authFnMiddleware])
     .handler(async ({ data, context }) => {
         const userId = context.session.user.id
@@ -16,8 +16,8 @@ export const createPresentation = createServerFn({ method: "POST" })
                 userId,
                 title: generateSlug(),
                 prompt: data.prompt,
-                slideCount: data.slideCount,
                 style: data.style,
+                slideCount: data.slideCount,
                 tone: data.tone,
                 layout: data.layout,
                 status: PresentationStatus.COMPLETED,
@@ -27,8 +27,8 @@ export const createPresentation = createServerFn({ method: "POST" })
         return presentation;
     })
 
-export const updatePResentation = createServerFn({ method: "POST" })
-    .inputValidator((data: unknown) => updatePresentationInputSchema.parse(data))
+export const updatePresentation = createServerFn({ method: "POST" })
+    .validator((data: unknown) => updatePresentationInputSchema.parse(data))
     .middleware([authFnMiddleware])
     .handler(async ({ data, context }) => {
         const userId = context.session.user.id
@@ -48,7 +48,7 @@ export const updatePResentation = createServerFn({ method: "POST" })
     })
 
 export const deletePresentation = createServerFn({ method: "POST" })
-    .inputValidator((data: unknown) => presentationIdInputSchema.parse(data))
+    .validator((data: unknown) => presentationIdInputSchema.parse(data))
     .middleware([authFnMiddleware])
     .handler(async ({ data, context }) => {
         const userId = context.session.user.id
@@ -67,7 +67,7 @@ export const deletePresentation = createServerFn({ method: "POST" })
     })
 
 export const regeneratePresentation = createServerFn({ method: "POST" })
-    .inputValidator((data: unknown) => presentationIdInputSchema.parse(data))
+    .validator((data: unknown) => presentationIdInputSchema.parse(data))
     .middleware([authFnMiddleware])
     .handler(async ({ data, context }) => {
         const userId = context.session.user.id
