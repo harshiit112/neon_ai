@@ -4,6 +4,7 @@ import { authFnMiddleware } from "#/middleware/auth";
 import { generateSlug } from "random-word-slugs";
 import { prisma } from "#/lib/db";
 import { PresentationStatus } from "#/lib/generated/prisma/enums";
+import { inngest } from "#/integrations/inngest/client";
 
 export const createPresentation = createServerFn({ method: "POST" })
     .validator((data: unknown) => createPresentationInputSchema.parse(data))
@@ -22,6 +23,11 @@ export const createPresentation = createServerFn({ method: "POST" })
                 layout: data.layout,
                 status: PresentationStatus.COMPLETED,
             },
+        })
+
+        await inngest.send({
+            name:"presentation/generate",
+            data:{presentationId:presentation.id}
         })
 
         return presentation;
