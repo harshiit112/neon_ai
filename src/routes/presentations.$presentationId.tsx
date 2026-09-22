@@ -8,8 +8,8 @@ import {
   usePresentationDetail,
 } from '#/features/presentation/constant/presentation-options.ts'
 import { GenerationStatus } from '#/features/presentation/components/generation-status.tsx'
-import { SlideCard } from '#/features/presentations/components/slide-card'
-import { SlidePreview } from '#/features/presentations/components/slide-preview'
+import { SlideCard } from '#/features/presentation/components/slide-card.tsx'
+import { SlidePreview } from '#/features/presentation/components/slide-preview.tsx'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,7 +51,7 @@ import {
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import { SlideshowModal } from '#/features/presentations/components/slideshow-modal'
+import { SlideshowModal } from '#/features/presentation/components/slideshow-modal.tsx'
 import { exportToPptx } from '#/features/presentations/lib/export-pptx'
 
 export const Route = createFileRoute('/presentations/$presentationId')({

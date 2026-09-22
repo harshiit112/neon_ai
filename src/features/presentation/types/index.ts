@@ -1,0 +1,1 @@
+export type { PresentationModel as Presentation } from '../../../lib/generated/prisma/models'
