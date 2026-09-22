@@ -3,13 +3,10 @@ import {
   LAYOUT_OPTIONS,
   SLIDE_STYLES,
   TONE_OPTIONS,
-  presentationThumbnailUrl,
-  useFullscreen,
-  usePresentationDetail,
-} from '#/features/presentation/constant/presentation-options.ts'
-import { GenerationStatus } from '#/features/presentation/components/generation-status.tsx'
-import { SlideCard } from '#/features/presentation/components/slide-card.tsx'
-import { SlidePreview } from '#/features/presentation/components/slide-preview.tsx'
+} from '#/features/presentation/constant/presentation-options'
+import { GenerationStatus } from '#/features/presentation/components/generation-status'
+import { SlideCard } from '#/features/presentation/components/slide-card'
+import { SlidePreview } from '#/features/presentation/components/slide-preview'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,8 +48,9 @@ import {
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
-import { SlideshowModal } from '#/features/presentation/components/slideshow-modal.tsx'
-import { exportToPptx } from '#/features/presentations/lib/export-pptx'
+import { SlideshowModal } from '#/features/presentation/components/slideshow-modal'
+import { exportToPptx } from '#/features/presentation/lib/export-pptx'
+import { presentationThumbnailUrl, useFullscreen, usePresentationDetail } from '#/features/presentation'
 
 export const Route = createFileRoute('/presentations/$presentationId')({
   beforeLoad: async ({ location }) => {
@@ -82,7 +80,6 @@ function PresentationDetailPage() {
     query,
     slides,
     isGenerating,
-    updatedLabel,
     form,
     setForm,
     updateMut,
@@ -134,15 +131,20 @@ function PresentationDetailPage() {
           <p className="text-destructive">
             {error instanceof Error ? error.message : 'Something went wrong'}
           </p>
-          <Button asChild variant="outline" className="rounded-xl">
-            <Link to="/">Back home</Link>
-          </Button>
+          <Link to="/">
+            <Button variant="outline" className="rounded-xl">
+              Back home
+            </Button>
+          </Link>
         </div>
       </main>
     )
   }
 
   const data = query.data
+  if (!data) {
+    return null
+  }
   const thumb = presentationThumbnailUrl(data.id)
   const activeSlide = slides.at(activeSlideIndex)
 
@@ -152,7 +154,6 @@ function PresentationDetailPage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Button
-              asChild
               variant="ghost"
               size="sm"
               className="rounded-xl gap-1"
@@ -165,7 +166,7 @@ function PresentationDetailPage() {
             <GenerationStatus status={data.status} />
           </div>
           <span className="text-sm text-muted-foreground">
-            Updated {updatedLabel}
+            Updated {data.updateAt.toLocaleString()}
           </span>
         </div>
 
@@ -265,7 +266,7 @@ function PresentationDetailPage() {
                         prompt: e.target.value,
                       }))
                     }
-                    className="min-h-[120px] text-sm bg-background/50 border-border/50 rounded-xl resize-y"
+                    className="min-h-30 text-sm bg-background/50 border-border/50 rounded-xl resize-y"
                   />
                 </div>
 
@@ -276,10 +277,10 @@ function PresentationDetailPage() {
                     </Label>
                     <Slider
                       value={[form.slideCount]}
-                      onValueChange={([v]) =>
+                      onValueChange={(value) =>
                         setForm((s) => ({
                           ...s,
-                          slideCount: v,
+                          slideCount: Array.isArray(value) ? value[0] : value,
                         }))
                       }
                       min={3}
@@ -361,7 +362,7 @@ function PresentationDetailPage() {
 
                 <div className="flex flex-wrap justify-between gap-3 pt-2">
                   <AlertDialog>
-                    <AlertDialogTrigger asChild>
+                    <AlertDialogTrigger>
                       <Button
                         type="button"
                         variant="destructive"
@@ -419,8 +420,9 @@ function PresentationDetailPage() {
                   <Button
                     variant="secondary"
                     size="icon"
-                    className={`absolute top-3 right-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity ${isFullscreen ? 'opacity-100' : ''
-                      }`}
+                    className={`absolute top-3 right-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity ${
+                      isFullscreen ? 'opacity-100' : ''
+                    }`}
                     onClick={toggleFullscreen}
                   >
                     <Maximize className="size-4" />

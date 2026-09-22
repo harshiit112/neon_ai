@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { presentationIdInputSchema } from "../types/schema";
+import { presentationIdInputSchema } from "../types/schemas";
 import { authMiddleware } from "#/middleware/auth";
 import { prisma } from "#/lib/db";
 

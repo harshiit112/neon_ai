@@ -5,8 +5,8 @@ import {
   CardTitle,
 } from '#/components/ui/card'
 import { Link } from '@tanstack/react-router'
-import { presentationThumbnailUrl } from '../utils'
-import type { Presentation } from '../types'
+import { presentationThumbnailUrl } from '../utils/thumbnail-url'
+import type { Presentation } from '../types/presentation.types'
 
 
 type PresentationCardProps = {
