@@ -10,9 +10,9 @@ import { LAYOUT_OPTIONS, SLIDE_STYLES, TONE_OPTIONS } from '#/features/presentat
 import { PRESENTATION_TEMPLATES } from '#/features/presentation/constant/presentation-template';
 import { presentationQueryKeys } from '#/features/presentation/hooks/query-keys';
 import { getSession } from '#/lib/auth.functions'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Wand2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -44,8 +44,6 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const [form, setForm] = useState({
     content: '',
     slideCount: 8,
@@ -53,41 +51,57 @@ function Home() {
     tone: 'formal',
     layout: 'balanced',
   })
+  const [isCreating, setIsCreating] = useState(false)
 
   const {data:presentations=[] , isPending:listPending} = useQuery({
     queryKey:presentationQueryKeys.list(),
     queryFn:()=>listPresentation()
   }) 
 
-  const createMut = useMutation({
-    mutationFn: () => createPresentation({
-      data: {
-        prompt: form.content.trim(),
-        slideCount: form.slideCount,
-        style: form.style,
-        tone: form.tone,
-        layout: form.layout,
-      },
-    }),
-    onSuccess: (presentation) => {
-      toast.success("Presentation Created");
-      queryClient.invalidateQueries({ queryKey: presentationQueryKeys.list() })
-      navigate({
-        to: "/presentations/$presentationId",
-        params: { presentationId: presentation.id },
-      })
-    },
-    onError: (error) => {
-      toast.error("Could not create presentation")
-    },
-  })
-
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!form.content.trim()) {
       toast.error("Please enter your content first");
       return;
     }
-    createMut.mutate();
+
+    setIsCreating(true)
+    try {
+      const presentation = await createPresentation({
+        data: {
+          prompt: form.content.trim(),
+          slideCount: form.slideCount,
+          style: form.style,
+          tone: form.tone,
+          layout: form.layout,
+        },
+      })
+
+      const response = presentation as {
+        id?: string
+        data?: { id?: string }
+        result?: { id?: string }
+      }
+      let presentationId = response.id ?? response.data?.id ?? response.result?.id
+      if (!presentationId) {
+        const latestPresentations = await listPresentation()
+        const listResponse = latestPresentations as unknown as
+          | Array<{ id?: string }>
+          | { data?: Array<{ id?: string }>; result?: Array<{ id?: string }> }
+        const presentations = Array.isArray(listResponse)
+          ? listResponse
+          : listResponse.data ?? listResponse.result ?? []
+        presentationId = presentations[0]?.id
+      }
+
+      if (!presentationId) {
+        throw new Error('Presentation was created, but its ID was not returned')
+      }
+
+      window.location.replace(`/presentations/${presentationId}`)
+    } catch (error) {
+      setIsCreating(false)
+      toast.error(error instanceof Error ? error.message : 'Could not create presentation')
+    }
   }
 
   return (
@@ -233,8 +247,8 @@ function Home() {
           <div className="flex justify-end pt-2">
             <Button
               size="lg"
-              onClick={handleCreate}
-              disabled={createMut.isPending || !form.content.trim()}
+              onClick={() => void handleCreate()}
+              disabled={isCreating || !form.content.trim()}
               className="rounded-xl px-8 gap-2 font-semibold"
             >
               <Wand2 className="size-5" />

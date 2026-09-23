@@ -53,6 +53,16 @@ import { exportToPptx } from '#/features/presentation/lib/export-pptx'
 import { presentationThumbnailUrl, useFullscreen, usePresentationDetail } from '#/features/presentation'
 
 export const Route = createFileRoute('/presentations/$presentationId')({
+  notFoundComponent: () => (
+    <main className="min-h-screen pt-24 px-4">
+      <div className="mx-auto max-w-2xl text-center">
+        <h1 className="text-2xl font-semibold">Presentation not found</h1>
+        <p className="mt-2 text-muted-foreground">
+          Check the presentation link and try again.
+        </p>
+      </div>
+    </main>
+  ),
   beforeLoad: async ({ location }) => {
     const session = await getSession()
 
@@ -362,17 +372,19 @@ function PresentationDetailPage() {
 
                 <div className="flex flex-wrap justify-between gap-3 pt-2">
                   <AlertDialog>
-                    <AlertDialogTrigger>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="rounded-xl gap-2"
-                        disabled={deleteMut.isPending}
-                      >
-                        <Trash2 className="size-4" />
-                        Delete
-                      </Button>
+                    <AlertDialogTrigger
+                      render={
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="rounded-xl gap-2"
+                          disabled={deleteMut.isPending}
+                        />
+                      }
+                    >
+                      <Trash2 className="size-4" />
+                      Delete
                     </AlertDialogTrigger>
                     <AlertDialogContent className="glass">
                       <AlertDialogHeader>

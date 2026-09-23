@@ -21,16 +21,24 @@ export const createPresentation = createServerFn({ method: "POST" })
                 slideCount: data.slideCount,
                 tone: data.tone,
                 layout: data.layout,
-                status: PresentationStatus.COMPLETED,
+                status: PresentationStatus.GENERATING,
             },
         })
 
-        await inngest.send({
-            name:"presentation/generate",
-            data:{presentationId:presentation.id}
+        void inngest.send({
+            name: "presentation/generate",
+            data: { presentationId: presentation.id },
+        }).catch(async () => {
+            try {
+                await prisma.presentation.update({
+                    where: { id: presentation.id },
+                    data: { status: PresentationStatus.FAILED },
+                })
+            } catch {
+            }
         })
 
-        return presentation;
+        return { id: presentation.id };
     })
 
 export const updatePresentation = createServerFn({ method: "POST" })
