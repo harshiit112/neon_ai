@@ -255,6 +255,7 @@ function PresentationDetailPage() {
                   </Label>
                   <input
                     id="pres-title"
+                    name="title"
                     value={form.title}
                     onChange={(e) =>
                       setForm((s) => ({
@@ -267,8 +268,13 @@ function PresentationDetailPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Prompt</Label>
+                  <Label id="settings-prompt-label" className="text-sm font-medium">
+                    Prompt
+                  </Label>
                   <Textarea
+                    id="settings-prompt"
+                    name="prompt"
+                    aria-labelledby="settings-prompt-label"
                     value={form.prompt}
                     onChange={(e) =>
                       setForm((s) => ({
@@ -282,10 +288,11 @@ function PresentationDetailPage() {
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">
+                    <Label id="settings-slide-count-label" className="text-sm font-medium">
                       Slides: {form.slideCount}
                     </Label>
                     <Slider
+                      aria-labelledby="settings-slide-count-label"
                       value={[form.slideCount]}
                       onValueChange={(value) =>
                         setForm((s) => ({
@@ -300,7 +307,7 @@ function PresentationDetailPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Style</Label>
+                    <Label id="settings-style-label" className="text-sm font-medium">Style</Label>
                     <Select
                       value={form.style}
                       onValueChange={(value) =>
@@ -310,7 +317,10 @@ function PresentationDetailPage() {
                         }))
                       }
                     >
-                      <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                      <SelectTrigger
+                        aria-labelledby="settings-style-label"
+                        className="bg-background/50 border-border/50 rounded-xl"
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="glass">
@@ -323,7 +333,7 @@ function PresentationDetailPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Tone</Label>
+                    <Label id="settings-tone-label" className="text-sm font-medium">Tone</Label>
                     <Select
                       value={form.tone}
                       onValueChange={(value) =>
@@ -333,7 +343,10 @@ function PresentationDetailPage() {
                         }))
                       }
                     >
-                      <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                      <SelectTrigger
+                        aria-labelledby="settings-tone-label"
+                        className="bg-background/50 border-border/50 rounded-xl"
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="glass">
@@ -346,7 +359,7 @@ function PresentationDetailPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Layout</Label>
+                    <Label id="settings-layout-label" className="text-sm font-medium">Layout</Label>
                     <Select
                       value={form.layout}
                       onValueChange={(value) =>
@@ -356,7 +369,10 @@ function PresentationDetailPage() {
                         }))
                       }
                     >
-                      <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                      <SelectTrigger
+                        aria-labelledby="settings-layout-label"
+                        className="bg-background/50 border-border/50 rounded-xl"
+                      >
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="glass">

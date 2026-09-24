@@ -20,8 +20,18 @@ export type PresentationModel = runtime.Types.Result.DefaultSelection<Prisma.$Pr
 
 export type AggregatePresentation = {
   _count: PresentationCountAggregateOutputType | null
+  _avg: PresentationAvgAggregateOutputType | null
+  _sum: PresentationSumAggregateOutputType | null
   _min: PresentationMinAggregateOutputType | null
   _max: PresentationMaxAggregateOutputType | null
+}
+
+export type PresentationAvgAggregateOutputType = {
+  slideCount: number | null
+}
+
+export type PresentationSumAggregateOutputType = {
+  slideCount: number | null
 }
 
 export type PresentationMinAggregateOutputType = {
@@ -30,6 +40,7 @@ export type PresentationMinAggregateOutputType = {
   title: string | null
   prompt: string | null
   style: string | null
+  slideCount: number | null
   tone: string | null
   layout: string | null
   status: $Enums.PresentationStatus | null
@@ -43,6 +54,7 @@ export type PresentationMaxAggregateOutputType = {
   title: string | null
   prompt: string | null
   style: string | null
+  slideCount: number | null
   tone: string | null
   layout: string | null
   status: $Enums.PresentationStatus | null
@@ -56,6 +68,7 @@ export type PresentationCountAggregateOutputType = {
   title: number
   prompt: number
   style: number
+  slideCount: number
   tone: number
   layout: number
   status: number
@@ -65,12 +78,21 @@ export type PresentationCountAggregateOutputType = {
 }
 
 
+export type PresentationAvgAggregateInputType = {
+  slideCount?: true
+}
+
+export type PresentationSumAggregateInputType = {
+  slideCount?: true
+}
+
 export type PresentationMinAggregateInputType = {
   id?: true
   userId?: true
   title?: true
   prompt?: true
   style?: true
+  slideCount?: true
   tone?: true
   layout?: true
   status?: true
@@ -84,6 +106,7 @@ export type PresentationMaxAggregateInputType = {
   title?: true
   prompt?: true
   style?: true
+  slideCount?: true
   tone?: true
   layout?: true
   status?: true
@@ -97,6 +120,7 @@ export type PresentationCountAggregateInputType = {
   title?: true
   prompt?: true
   style?: true
+  slideCount?: true
   tone?: true
   layout?: true
   status?: true
@@ -143,6 +167,18 @@ export type PresentationAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: PresentationAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: PresentationSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: PresentationMinAggregateInputType
@@ -173,6 +209,8 @@ export type PresentationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: PresentationCountAggregateInputType | true
+  _avg?: PresentationAvgAggregateInputType
+  _sum?: PresentationSumAggregateInputType
   _min?: PresentationMinAggregateInputType
   _max?: PresentationMaxAggregateInputType
 }
@@ -183,12 +221,15 @@ export type PresentationGroupByOutputType = {
   title: string
   prompt: string
   style: string
+  slideCount: number
   tone: string
   layout: string
   status: $Enums.PresentationStatus
   createAt: Date
   updateAt: Date
   _count: PresentationCountAggregateOutputType | null
+  _avg: PresentationAvgAggregateOutputType | null
+  _sum: PresentationSumAggregateOutputType | null
   _min: PresentationMinAggregateOutputType | null
   _max: PresentationMaxAggregateOutputType | null
 }
@@ -217,6 +258,7 @@ export type PresentationWhereInput = {
   title?: Prisma.StringFilter<"Presentation"> | string
   prompt?: Prisma.StringFilter<"Presentation"> | string
   style?: Prisma.StringFilter<"Presentation"> | string
+  slideCount?: Prisma.IntFilter<"Presentation"> | number
   tone?: Prisma.StringFilter<"Presentation"> | string
   layout?: Prisma.StringFilter<"Presentation"> | string
   status?: Prisma.EnumPresentationStatusFilter<"Presentation"> | $Enums.PresentationStatus
@@ -232,6 +274,7 @@ export type PresentationOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   style?: Prisma.SortOrder
+  slideCount?: Prisma.SortOrder
   tone?: Prisma.SortOrder
   layout?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -250,6 +293,7 @@ export type PresentationWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Presentation"> | string
   prompt?: Prisma.StringFilter<"Presentation"> | string
   style?: Prisma.StringFilter<"Presentation"> | string
+  slideCount?: Prisma.IntFilter<"Presentation"> | number
   tone?: Prisma.StringFilter<"Presentation"> | string
   layout?: Prisma.StringFilter<"Presentation"> | string
   status?: Prisma.EnumPresentationStatusFilter<"Presentation"> | $Enums.PresentationStatus
@@ -265,14 +309,17 @@ export type PresentationOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   style?: Prisma.SortOrder
+  slideCount?: Prisma.SortOrder
   tone?: Prisma.SortOrder
   layout?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
   _count?: Prisma.PresentationCountOrderByAggregateInput
+  _avg?: Prisma.PresentationAvgOrderByAggregateInput
   _max?: Prisma.PresentationMaxOrderByAggregateInput
   _min?: Prisma.PresentationMinOrderByAggregateInput
+  _sum?: Prisma.PresentationSumOrderByAggregateInput
 }
 
 export type PresentationScalarWhereWithAggregatesInput = {
@@ -284,6 +331,7 @@ export type PresentationScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Presentation"> | string
   prompt?: Prisma.StringWithAggregatesFilter<"Presentation"> | string
   style?: Prisma.StringWithAggregatesFilter<"Presentation"> | string
+  slideCount?: Prisma.IntWithAggregatesFilter<"Presentation"> | number
   tone?: Prisma.StringWithAggregatesFilter<"Presentation"> | string
   layout?: Prisma.StringWithAggregatesFilter<"Presentation"> | string
   status?: Prisma.EnumPresentationStatusWithAggregatesFilter<"Presentation"> | $Enums.PresentationStatus
@@ -296,6 +344,7 @@ export type PresentationCreateInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -311,6 +360,7 @@ export type PresentationUncheckedCreateInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -324,6 +374,7 @@ export type PresentationUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -339,6 +390,7 @@ export type PresentationUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -353,6 +405,7 @@ export type PresentationCreateManyInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -365,6 +418,7 @@ export type PresentationUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -378,6 +432,7 @@ export type PresentationUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -401,11 +456,16 @@ export type PresentationCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   style?: Prisma.SortOrder
+  slideCount?: Prisma.SortOrder
   tone?: Prisma.SortOrder
   layout?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
+}
+
+export type PresentationAvgOrderByAggregateInput = {
+  slideCount?: Prisma.SortOrder
 }
 
 export type PresentationMaxOrderByAggregateInput = {
@@ -414,6 +474,7 @@ export type PresentationMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   style?: Prisma.SortOrder
+  slideCount?: Prisma.SortOrder
   tone?: Prisma.SortOrder
   layout?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -427,11 +488,16 @@ export type PresentationMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   prompt?: Prisma.SortOrder
   style?: Prisma.SortOrder
+  slideCount?: Prisma.SortOrder
   tone?: Prisma.SortOrder
   layout?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createAt?: Prisma.SortOrder
   updateAt?: Prisma.SortOrder
+}
+
+export type PresentationSumOrderByAggregateInput = {
+  slideCount?: Prisma.SortOrder
 }
 
 export type PresentationScalarRelationFilter = {
@@ -481,6 +547,14 @@ export type PresentationUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.PresentationScalarWhereInput | Prisma.PresentationScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type EnumPresentationStatusFieldUpdateOperationsInput = {
   set?: $Enums.PresentationStatus
 }
@@ -504,6 +578,7 @@ export type PresentationCreateWithoutUserInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -517,6 +592,7 @@ export type PresentationUncheckedCreateWithoutUserInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -560,6 +636,7 @@ export type PresentationScalarWhereInput = {
   title?: Prisma.StringFilter<"Presentation"> | string
   prompt?: Prisma.StringFilter<"Presentation"> | string
   style?: Prisma.StringFilter<"Presentation"> | string
+  slideCount?: Prisma.IntFilter<"Presentation"> | number
   tone?: Prisma.StringFilter<"Presentation"> | string
   layout?: Prisma.StringFilter<"Presentation"> | string
   status?: Prisma.EnumPresentationStatusFilter<"Presentation"> | $Enums.PresentationStatus
@@ -572,6 +649,7 @@ export type PresentationCreateWithoutSlidesInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -586,6 +664,7 @@ export type PresentationUncheckedCreateWithoutSlidesInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -614,6 +693,7 @@ export type PresentationUpdateWithoutSlidesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -628,6 +708,7 @@ export type PresentationUncheckedUpdateWithoutSlidesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -640,6 +721,7 @@ export type PresentationCreateManyUserInput = {
   title: string
   prompt: string
   style: string
+  slideCount?: number
   tone: string
   layout: string
   status?: $Enums.PresentationStatus
@@ -652,6 +734,7 @@ export type PresentationUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -665,6 +748,7 @@ export type PresentationUncheckedUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -678,6 +762,7 @@ export type PresentationUncheckedUpdateManyWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   prompt?: Prisma.StringFieldUpdateOperationsInput | string
   style?: Prisma.StringFieldUpdateOperationsInput | string
+  slideCount?: Prisma.IntFieldUpdateOperationsInput | number
   tone?: Prisma.StringFieldUpdateOperationsInput | string
   layout?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPresentationStatusFieldUpdateOperationsInput | $Enums.PresentationStatus
@@ -722,6 +807,7 @@ export type PresentationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   title?: boolean
   prompt?: boolean
   style?: boolean
+  slideCount?: boolean
   tone?: boolean
   layout?: boolean
   status?: boolean
@@ -738,6 +824,7 @@ export type PresentationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   title?: boolean
   prompt?: boolean
   style?: boolean
+  slideCount?: boolean
   tone?: boolean
   layout?: boolean
   status?: boolean
@@ -752,6 +839,7 @@ export type PresentationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   title?: boolean
   prompt?: boolean
   style?: boolean
+  slideCount?: boolean
   tone?: boolean
   layout?: boolean
   status?: boolean
@@ -766,6 +854,7 @@ export type PresentationSelectScalar = {
   title?: boolean
   prompt?: boolean
   style?: boolean
+  slideCount?: boolean
   tone?: boolean
   layout?: boolean
   status?: boolean
@@ -773,7 +862,7 @@ export type PresentationSelectScalar = {
   updateAt?: boolean
 }
 
-export type PresentationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "prompt" | "style" | "tone" | "layout" | "status" | "createAt" | "updateAt", ExtArgs["result"]["presentation"]>
+export type PresentationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "prompt" | "style" | "slideCount" | "tone" | "layout" | "status" | "createAt" | "updateAt", ExtArgs["result"]["presentation"]>
 export type PresentationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   slides?: boolean | Prisma.Presentation$slidesArgs<ExtArgs>
@@ -798,6 +887,7 @@ export type $PresentationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     title: string
     prompt: string
     style: string
+    slideCount: number
     tone: string
     layout: string
     status: $Enums.PresentationStatus
@@ -1233,6 +1323,7 @@ export interface PresentationFieldRefs {
   readonly title: Prisma.FieldRef<"Presentation", 'String'>
   readonly prompt: Prisma.FieldRef<"Presentation", 'String'>
   readonly style: Prisma.FieldRef<"Presentation", 'String'>
+  readonly slideCount: Prisma.FieldRef<"Presentation", 'Int'>
   readonly tone: Prisma.FieldRef<"Presentation", 'String'>
   readonly layout: Prisma.FieldRef<"Presentation", 'String'>
   readonly status: Prisma.FieldRef<"Presentation", 'PresentationStatus'>

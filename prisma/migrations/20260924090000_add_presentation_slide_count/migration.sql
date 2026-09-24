@@ -1,0 +1,2 @@
+ALTER TABLE "presentation"
+ADD COLUMN "slideCount" INTEGER NOT NULL DEFAULT 8;

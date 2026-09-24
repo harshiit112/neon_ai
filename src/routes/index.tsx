@@ -76,22 +76,10 @@ function Home() {
         },
       })
 
-      const response = presentation as {
-        id?: string
-        data?: { id?: string }
-        result?: { id?: string }
-      }
-      let presentationId = response.id ?? response.data?.id ?? response.result?.id
-      if (!presentationId) {
-        const latestPresentations = await listPresentation()
-        const listResponse = latestPresentations as unknown as
-          | Array<{ id?: string }>
-          | { data?: Array<{ id?: string }>; result?: Array<{ id?: string }> }
-        const presentations = Array.isArray(listResponse)
-          ? listResponse
-          : listResponse.data ?? listResponse.result ?? []
-        presentationId = presentations[0]?.id
-      }
+      const response = presentation as unknown
+      const presentationId = typeof response === 'string'
+        ? response
+        : (response as { id?: string })?.id
 
       if (!presentationId) {
         throw new Error('Presentation was created, but its ID was not returned')
@@ -129,6 +117,8 @@ function Home() {
           {/* Textarea */}
           <div className="space-y-2">
             <Textarea
+              id="presentation-content"
+              name="content"
               placeholder="Describe your presentation topic, paste your notes, or outline your key points..."
               value={form.content}
               onChange={(e) =>
@@ -149,10 +139,11 @@ function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Slide count */}
             <div className="space-y-2.5">
-              <Label className="text-sm font-medium">
+              <Label id="slide-count-label" className="text-sm font-medium">
                 Slides: {form.slideCount}
               </Label>
               <Slider
+                aria-labelledby="slide-count-label"
                 value={[form.slideCount]}
                 onValueChange={(value) =>
                   setForm((s) => ({
@@ -169,7 +160,7 @@ function Home() {
 
             {/* Style */}
             <div className="space-y-2.5">
-              <Label className="text-sm font-medium">Style</Label>
+              <Label id="presentation-style-label" className="text-sm font-medium">Style</Label>
               <Select
                 value={form.style}
                 onValueChange={(value) =>
@@ -179,7 +170,10 @@ function Home() {
                   }))
                 }
               >
-                <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                <SelectTrigger
+                  aria-labelledby="presentation-style-label"
+                  className="bg-background/50 border-border/50 rounded-xl"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="glass">
@@ -194,7 +188,7 @@ function Home() {
 
             {/* Tone */}
             <div className="space-y-2.5">
-              <Label className="text-sm font-medium">Tone</Label>
+              <Label id="presentation-tone-label" className="text-sm font-medium">Tone</Label>
               <Select
                 value={form.tone}
                 onValueChange={(value) =>
@@ -204,7 +198,10 @@ function Home() {
                   }))
                 }
               >
-                <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                <SelectTrigger
+                  aria-labelledby="presentation-tone-label"
+                  className="bg-background/50 border-border/50 rounded-xl"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="glass">
@@ -219,7 +216,7 @@ function Home() {
 
             {/* Layout */}
             <div className="space-y-2.5">
-              <Label className="text-sm font-medium">Layout</Label>
+              <Label id="presentation-layout-label" className="text-sm font-medium">Layout</Label>
               <Select
                 value={form.layout}
                 onValueChange={(value) =>
@@ -229,7 +226,10 @@ function Home() {
                   }))
                 }
               >
-                <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                <SelectTrigger
+                  aria-labelledby="presentation-layout-label"
+                  className="bg-background/50 border-border/50 rounded-xl"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="glass">

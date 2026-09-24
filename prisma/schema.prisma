@@ -91,6 +91,7 @@ model Presentation {
   title    String
   prompt   String             @db.Text
   style    String
+  slideCount Int              @default(8)
   tone     String
   layout   String
   status   PresentationStatus @default(DRAFT)

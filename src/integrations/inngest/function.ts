@@ -71,7 +71,7 @@ export const generatePresentation = inngest.createFunction(
 Style: ${presentation.style}
 Tone: ${presentation.tone}
 Layout preference: ${presentation.layout}
-Create an appropriate number of slides for the user's content.
+Create exactly ${presentation.slideCount} slides.
 
 Guidelines:
 - Create a coherent presentation with a suitable number of slides
@@ -82,7 +82,7 @@ Guidelines:
 `
 
       const result = await generateText({
-        model: google('gemini-2.5-flash'),
+        model: google('gemini-3.8-flash'),
         output: Output.object({ schema: slidesResponseSchema }),
         system: systemPrompt,
         prompt: presentation.prompt,

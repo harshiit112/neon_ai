@@ -7,6 +7,7 @@ import { presentationQueryKeys } from './query-keys'
 import {
     deletePresentation,
     regeneratePresentation,
+    startPresentationGeneration,
     updatePresentation,
 } from '../actions/presentation-mutation'
 import { getPresentationWithSlides } from '../actions/presentation-query'
@@ -51,12 +52,23 @@ export function usePresentationDetail(
         setForm({
             title: query.data.title,
             prompt: query.data.prompt,
-            slideCount: query.data.slides.length,
+            slideCount: query.data.slideCount,
             style: query.data.style as SlideStyle,
             tone: query.data.tone as SlideTone,
             layout: query.data.layout as SlideLayout,
         })
     }, [query.data])
+
+    useEffect(() => {
+        if (query.data?.status !== 'GENERATING') return
+
+        startPresentationGeneration({ data: { id: presentationId } }).catch((error) => {
+            toast.error(error instanceof Error ? error.message : 'Could not start generation')
+            queryClient.invalidateQueries({
+                queryKey: presentationQueryKeys.detail(presentationId),
+            })
+        })
+    }, [presentationId, query.data?.status, queryClient])
 
     const updateMut = useMutation({
         mutationFn: () =>

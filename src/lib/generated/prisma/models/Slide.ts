@@ -513,14 +513,6 @@ export type SlideUncheckedUpdateManyWithoutPresentationNestedInput = {
   deleteMany?: Prisma.SlideScalarWhereInput | Prisma.SlideScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type SlideCreateWithoutPresentationInput = {
   id?: string
   order: number

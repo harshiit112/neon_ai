@@ -1052,6 +1052,7 @@ export const PresentationScalarFieldEnum = {
   title: 'title',
   prompt: 'prompt',
   style: 'style',
+  slideCount: 'slideCount',
   tone: 'tone',
   layout: 'layout',
   status: 'status',
@@ -1144,20 +1145,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'PresentationStatus'
- */
-export type EnumPresentationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresentationStatus'>
-    
-
-
-/**
- * Reference to a field of type 'PresentationStatus[]'
- */
-export type ListEnumPresentationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresentationStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1168,6 +1155,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PresentationStatus'
+ */
+export type EnumPresentationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresentationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PresentationStatus[]'
+ */
+export type ListEnumPresentationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PresentationStatus[]'>
     
 
 

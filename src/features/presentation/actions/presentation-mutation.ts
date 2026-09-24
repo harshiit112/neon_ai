@@ -25,20 +25,35 @@ export const createPresentation = createServerFn({ method: "POST" })
             },
         })
 
-        void inngest.send({
-            name: "presentation/generate",
-            data: { presentationId: presentation.id },
-        }).catch(async () => {
+        return presentation.id;
+    })
+
+export const startPresentationGeneration = createServerFn({ method: "POST" })
+    .validator((data: unknown) => presentationIdInputSchema.parse(data))
+    .middleware([authFnMiddleware])
+    .handler(async ({ data, context }) => {
+        const presentation = await prisma.presentation.findFirst({
+            where: { id: data.id, userId: context.session.user.id },
+        })
+
+        if (!presentation) throw new Error('Not found')
+
+        if (presentation.status === PresentationStatus.GENERATING) {
             try {
+                await inngest.send({
+                    name: "presentation/generate",
+                    data: { presentationId: presentation.id },
+                })
+            } catch (error) {
                 await prisma.presentation.update({
                     where: { id: presentation.id },
                     data: { status: PresentationStatus.FAILED },
                 })
-            } catch {
+                throw error
             }
-        })
+        }
 
-        return { id: presentation.id };
+        return { id: presentation.id }
     })
 
 export const updatePresentation = createServerFn({ method: "POST" })

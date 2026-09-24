@@ -148,6 +148,7 @@ export const PresentationScalarFieldEnum = {
   title: 'title',
   prompt: 'prompt',
   style: 'style',
+  slideCount: 'slideCount',
   tone: 'tone',
   layout: 'layout',
   status: 'status',
