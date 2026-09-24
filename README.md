@@ -1,209 +1,409 @@
-Welcome to your new TanStack Start app!
+# neon.ai
 
-# Getting Started
+> Turn a rough idea, set of notes, or product brief into a polished presentation.
 
-To run this application:
+neon.ai is a full-stack AI presentation studio built with TanStack Start. Users sign in, describe what they want to present, choose a visual style, tone, layout, and slide count, then receive an editable presentation with generated slide content and visual prompts.
+
+## Product Workflow
+
+The application separates presentation creation from AI generation so the user reaches the presentation workspace immediately while the longer-running generation job continues in the background.
+
+```mermaid
+flowchart LR
+    A[Sign in] --> B[Enter prompt and options]
+    B --> C[Create presentation record]
+    C --> D[Redirect to /presentations/id]
+    D --> E[Dispatch Inngest event]
+    E --> F[Generate structured slides with Gemini]
+    F --> G[Create slide records in PostgreSQL]
+    G --> H[Mark presentation completed]
+    H --> I[Refresh workspace]
+```
+
+### Create and generate flow
+
+1. The user authenticates with Better Auth and a social provider.
+2. The home route validates the prompt and presentation options.
+3. A TanStack Start server function creates a `Presentation` row with `GENERATING` status.
+4. The client redirects to `/presentations/:presentationId` using the returned ID.
+5. The presentation detail hook dispatches the `presentation/generate` Inngest event.
+6. Inngest loads the presentation, asks Gemini for structured slide data, and writes the slides to PostgreSQL.
+7. The detail page polls while the status is `GENERATING` and displays the completed deck when the worker finishes.
+
+### Presentation workspace
+
+The detail page supports:
+
+- Live generation status.
+- Slide-by-slide preview and navigation.
+- Editing the title, prompt, slide count, style, tone, and layout.
+- Regenerating slides.
+- Deleting a presentation.
+- Full-screen preview and slideshow mode.
+- PPTX export.
+
+## Technology Stack
+
+| Area | Technology | Role |
+| --- | --- | --- |
+| Application | TanStack Start | SSR, server functions, API routes, and Vite integration |
+| UI | React 19 | Component-based interface |
+| Routing | TanStack Router | File-based typed routes and navigation |
+| Data fetching | TanStack Query | Server state, caching, invalidation, and polling |
+| Styling | Tailwind CSS 4 | Utility styling and responsive layouts |
+| Components | Base UI, Lucide React, Shadcn-style primitives | Accessible controls and interaction patterns |
+| Authentication | Better Auth | Sessions, cookies, Google OAuth, and GitHub OAuth |
+| Database | PostgreSQL on Neon | Users, sessions, presentations, and slides |
+| ORM | Prisma 7 with `@prisma/adapter-pg` | Schema, migrations, and typed database access |
+| AI | Vercel AI SDK and Google Gemini | Structured slide generation |
+| Background jobs | Inngest | Durable asynchronous presentation generation |
+| Media | ImageKit | Image URLs for slide visuals and thumbnails |
+| Build and deploy | Vite, Nitro, Vercel | Production build and serverless deployment |
+
+## Repository Structure
+
+```text
+src/
+  components/             Shared application and UI components
+  features/presentation/  Presentation actions, components, hooks, and types
+  integrations/           Better Auth, Inngest, and TanStack Query integrations
+  lib/                    Database, authentication, ImageKit, and utilities
+  middleware/             Request and server-function authentication middleware
+  routes/                 File-based pages and API routes
+  router.tsx              TanStack Router and SSR Query setup
+  styles.css              Global styles and Tailwind entrypoint
+
+prisma/
+  schema.prisma           PostgreSQL data model
+  migrations/             Versioned database migrations
+
+vite.config.ts            Vite, TanStack Start, Nitro, React, and Tailwind plugins
+vercel.json               Vercel framework configuration
+prisma.config.ts          Prisma schema and migration configuration
+tsconfig.json             Strict TypeScript configuration
+package.json              Scripts and dependencies
+```
+
+## Requirements
+
+- Node.js 20 or newer.
+- npm.
+- A PostgreSQL database, preferably Neon for this project.
+- A Google Gemini API key.
+- An Inngest account for production, or the Inngest Dev Server locally.
+- An ImageKit account for generated visual URLs.
+- OAuth credentials for Google and/or GitHub.
+
+## Local Setup
+
+### 1. Install dependencies
 
 ```bash
 npm install
+```
+
+### 2. Configure environment variables
+
+Create `.env` in the project root. Never commit this file.
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=verify-full"
+
+BETTER_AUTH_SECRET="replace-with-a-long-random-secret"
+BETTER_AUTH_URL="http://localhost:3000"
+
+GOOGLE_CLIENT_ID="your-google-oauth-client-id"
+GOOGLE_CLIENT_SECRET="your-google-oauth-client-secret"
+
+GITHUB_CLIENT_ID="your-github-client-id"
+GITHUB_CLIENT_SECRET="your-github-client-secret"
+
+GOOGLE_GENERATIVE_AI_API_KEY="your-gemini-api-key"
+
+IMAGEKIT_PUBLIC_KEY="your-imagekit-public-key"
+IMAGEKIT_PRIVATE_KEY="your-imagekit-private-key"
+IMAGEKIT_BASE_URL="https://ik.imagekit.io/your-imagekit-id"
+
+INNGEST_DEV=1
+INNGEST_DEVSERVER_URL="http://localhost:8288"
+```
+
+Use the exact model configured in `src/integrations/inngest/function.ts`. The AI provider and model can change over time, so confirm the selected Gemini model is available for your API account.
+
+### 3. Apply database migrations
+
+```bash
+npx prisma migrate deploy
+npx prisma generate
+```
+
+For local schema development, use `npx prisma migrate dev` instead of manually editing the database.
+
+### 4. Start Inngest locally
+
+Run the Inngest Dev Server in a separate terminal:
+
+```bash
+npx inngest-cli@latest dev
+```
+
+The local dashboard is available at `http://localhost:8288`. The application exposes its Inngest endpoint at:
+
+```text
+http://localhost:3000/api/inngest
+```
+
+### 5. Start the application
+
+```bash
 npm run dev
 ```
 
-# Building For Production
+Open `http://localhost:3000`.
 
-To build this application for production:
+## Available Commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite/TanStack Start development server on port 3000 |
+| `npm run build` | Build the client, SSR bundle, and Nitro output |
+| `npm run preview` | Preview the production build locally |
+| `npm run generate-routes` | Regenerate the TanStack Router route tree |
+| `npm run lint` | Run ESLint |
+| `npm run check` | Check Prettier formatting |
+| `npm run format` | Format files and apply ESLint fixes |
+| `npx prisma migrate deploy` | Apply committed migrations |
+| `npx prisma generate` | Regenerate the typed Prisma client |
+| `npx prisma studio` | Open Prisma Studio |
+
+## Authentication
+
+Better Auth stores users, sessions, accounts, and verification records in PostgreSQL through the Prisma adapter.
+
+The application uses:
+
+- `src/lib/auth.ts` for server-side Better Auth configuration.
+- `src/lib/auth-client.ts` for the browser client.
+- `src/lib/auth.functions.ts` for server-side session access.
+- `src/middleware/auth.ts` for protected route and server-function guards.
+- `src/routes/api/auth/$.ts` for the Better Auth API handler.
+
+### Google OAuth callback URLs
+
+For local development:
+
+```text
+Authorized JavaScript origin:
+http://localhost:3000
+
+Authorized redirect URI:
+http://localhost:3000/api/auth/callback/google
+```
+
+For Vercel, replace the host with the deployed domain:
+
+```text
+https://your-app.vercel.app/api/auth/callback/google
+```
+
+The Google OAuth consent screen must also include your account as a test user while the app is in testing mode.
+
+## Database Model
+
+The main domain entities are:
+
+- `User`: authenticated application user.
+- `Session`: Better Auth session data.
+- `Account`: OAuth provider account linkage.
+- `Verification`: Better Auth verification data.
+- `Presentation`: prompt, configuration, owner, status, and timestamps.
+- `Slide`: generated content belonging to a presentation.
+
+Presentation statuses are:
+
+```text
+DRAFT       Initial editable state
+GENERATING  Background AI generation is running
+COMPLETED   Slides were generated successfully
+FAILED      Generation or event delivery failed
+```
+
+The `slideCount` field stores the requested number of slides and defaults to `8` for older records.
+
+## Server Functions and API Routes
+
+The application uses TanStack Start server functions for typed server-side operations:
+
+### Presentation functions
+
+Located in `src/features/presentation/actions/`:
+
+- Create a presentation.
+- Start background generation.
+- Read a presentation with its slides.
+- List the current user's presentations.
+- Update presentation settings.
+- Regenerate slides.
+- Delete a presentation.
+
+### API routes
+
+| Route | Purpose |
+| --- | --- |
+| `/api/auth/*` | Better Auth API and OAuth callbacks |
+| `/api/inngest` | Inngest function registration and event delivery |
+
+## AI Generation Pipeline
+
+The Inngest function in `src/integrations/inngest/function.ts` performs the following steps:
+
+1. Fetch the presentation from PostgreSQL.
+2. Mark the record as `GENERATING`.
+3. Send the prompt and presentation preferences to Google Gemini.
+4. Validate the structured response with Zod.
+5. Delete previous slides when regenerating.
+6. Create the new slide records.
+7. Build ImageKit visual URLs for each slide.
+8. Mark the presentation as `COMPLETED`.
+
+If a step fails, inspect the Inngest run and server logs. Common causes include an unavailable Gemini model, an invalid API key, exhausted provider quota, or a missing ImageKit base URL.
+
+## Vercel Deployment
+
+### 1. Push the repository
 
 ```bash
-npm run build
+git add .
+git commit -m "Prepare neon.ai for deployment"
+git push origin main
 ```
 
-## Styling
+Do not commit `.env` or any secret values.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+### 2. Import the project into Vercel
 
-### Removing Tailwind CSS
+1. Open Vercel and select **Add New > Project**.
+2. Import the GitHub repository.
+3. Keep the TanStack Start framework detection.
+4. Use `npm run build` as the build command if Vercel does not detect it automatically.
+5. Leave the output directory empty; Nitro manages the deployment output.
 
-If you prefer not to use Tailwind CSS:
+### 3. Add production environment variables
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+Add the production equivalents of the local variables in Vercel project settings:
 
-## Linting & Formatting
+```text
+DATABASE_URL
+BETTER_AUTH_SECRET
+BETTER_AUTH_URL
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GITHUB_CLIENT_ID
+GITHUB_CLIENT_SECRET
+GOOGLE_GENERATIVE_AI_API_KEY
+IMAGEKIT_PUBLIC_KEY
+IMAGEKIT_PRIVATE_KEY
+IMAGEKIT_BASE_URL
+INNGEST_EVENT_KEY
+INNGEST_SIGNING_KEY
+```
 
+Do not set `INNGEST_DEV=1` in production.
 
-This project uses [eslint](https://eslint.org/) and [prettier](https://prettier.io/) for linting and formatting. Eslint is configured using [tanstack/eslint-config](https://tanstack.com/config/latest/docs/eslint). The following scripts are available:
+### 4. Configure Inngest production delivery
+
+Register this deployed endpoint with Inngest:
+
+```text
+https://your-domain.vercel.app/api/inngest
+```
+
+The local Inngest Dev Server is not used by Vercel. Production generation requires the Inngest cloud environment and its event/signing keys.
+
+### 5. Apply production migrations
+
+Before or during the first production deployment, point `DATABASE_URL` at the production Neon branch and run:
 
 ```bash
-npm run lint
-npm run format
-npm run check
+npx prisma migrate deploy
+npx prisma generate
 ```
 
+Never use `prisma migrate reset` against production data.
 
-## Deploy to Vercel
+### 6. Deploy and verify
 
-1. Push this repo to GitHub, GitLab, or Bitbucket
-2. In Vercel, choose **Add New > Project** and import the repo
-3. Keep the detected TanStack Start framework settings
-4. Add production values from `.env.example` under **Settings > Environment Variables**
-5. Deploy
+After deployment:
 
-Vercel runs the build script and deploys Nitro's output as Vercel Functions and
-static assets. The included `vercel.json` makes framework detection explicit.
+1. Open the production URL.
+2. Sign in with an OAuth provider.
+3. Create a presentation.
+4. Confirm the browser navigates to `/presentations/<id>`.
+5. Confirm the status moves from `GENERATING` to `COMPLETED`.
+6. Check Vercel function logs and Inngest run logs if a job fails.
 
-Variables prefixed with `VITE_` are included in the browser bundle. Keep secrets
-unprefixed so they remain server-only.
+## Troubleshooting
 
+### The Generate button does not navigate
 
+Check the browser Network panel for the create server-function request. A successful request must return a presentation ID. Then inspect the destination request and the server logs.
 
-## Routing
+Common causes:
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+- Database migration is missing `slideCount`.
+- The user session is expired.
+- `DATABASE_URL` points to an unavailable database.
+- A stale Vite process is serving old generated Prisma code.
 
-### Adding A Route
+Restart after schema or environment changes:
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```bash
+npm run dev
 ```
 
-Then anywhere in your JSX you can use it like so:
+### The presentation stays in `GENERATING`
 
-```tsx
-<Link to="/about">About</Link>
+Check:
+
+- Inngest Dev Server or production Inngest is running.
+- `/api/inngest` is registered successfully.
+- `GOOGLE_GENERATIVE_AI_API_KEY` is valid.
+- The Gemini model configured in the worker is available to your account.
+- ImageKit variables are present.
+
+### OAuth fails
+
+Check:
+
+- `BETTER_AUTH_URL` matches the current host.
+- Google/GitHub callback URLs exactly match the current domain.
+- OAuth client secrets are present in the same Vercel environment as the deployment.
+- The OAuth app includes your account as a test user when applicable.
+
+### Database connection errors
+
+Use a Neon connection string with explicit SSL verification:
+
+```text
+?sslmode=verify-full
 ```
 
-This will create a link that will navigate to the `/about` route.
+Then verify connectivity and migrations:
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
+```bash
+npx prisma migrate status
+npx prisma migrate deploy
 ```
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+## Security Notes
 
-## Server Functions
+- Never commit `.env` files or secret values.
+- Keep OAuth client secrets, database URLs, AI keys, ImageKit private keys, and Inngest signing keys server-only.
+- Do not prefix secrets with `VITE_`.
+- Rotate any credential that has been exposed in logs, screenshots, commits, or chat.
+- Use separate Neon branches and credentials for development, preview, and production.
+- Use a strong, unique `BETTER_AUTH_SECRET` in every environment.
 
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
+## License
 
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+No license has been declared for this project yet.
