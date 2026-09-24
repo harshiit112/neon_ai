@@ -44,21 +44,21 @@ The detail page supports:
 
 ## Technology Stack
 
-| Area | Technology | Role |
-| --- | --- | --- |
-| Application | TanStack Start | SSR, server functions, API routes, and Vite integration |
-| UI | React 19 | Component-based interface |
-| Routing | TanStack Router | File-based typed routes and navigation |
-| Data fetching | TanStack Query | Server state, caching, invalidation, and polling |
-| Styling | Tailwind CSS 4 | Utility styling and responsive layouts |
-| Components | Base UI, Lucide React, Shadcn-style primitives | Accessible controls and interaction patterns |
-| Authentication | Better Auth | Sessions, cookies, Google OAuth, and GitHub OAuth |
-| Database | PostgreSQL on Neon | Users, sessions, presentations, and slides |
-| ORM | Prisma 7 with `@prisma/adapter-pg` | Schema, migrations, and typed database access |
-| AI | Vercel AI SDK and Google Gemini | Structured slide generation |
-| Background jobs | Inngest | Durable asynchronous presentation generation |
-| Media | ImageKit | Image URLs for slide visuals and thumbnails |
-| Build and deploy | Vite, Nitro, Vercel | Production build and serverless deployment |
+| Area             | Technology                                     | Role                                                    |
+| ---------------- | ---------------------------------------------- | ------------------------------------------------------- |
+| Application      | TanStack Start                                 | SSR, server functions, API routes, and Vite integration |
+| UI               | React 19                                       | Component-based interface                               |
+| Routing          | TanStack Router                                | File-based typed routes and navigation                  |
+| Data fetching    | TanStack Query                                 | Server state, caching, invalidation, and polling        |
+| Styling          | Tailwind CSS 4                                 | Utility styling and responsive layouts                  |
+| Components       | Base UI, Lucide React, Shadcn-style primitives | Accessible controls and interaction patterns            |
+| Authentication   | Better Auth                                    | Sessions, cookies, Google OAuth, and GitHub OAuth       |
+| Database         | PostgreSQL on Neon                             | Users, sessions, presentations, and slides              |
+| ORM              | Prisma 7 with `@prisma/adapter-pg`             | Schema, migrations, and typed database access           |
+| AI               | Vercel AI SDK and Google Gemini                | Structured slide generation                             |
+| Background jobs  | Inngest                                        | Durable asynchronous presentation generation            |
+| Media            | ImageKit                                       | Image URLs for slide visuals and thumbnails             |
+| Build and deploy | Vite, Nitro, Vercel                            | Production build and serverless deployment              |
 
 ## Repository Structure
 
@@ -163,18 +163,18 @@ Open `http://localhost:3000`.
 
 ## Available Commands
 
-| Command | Purpose |
-| --- | --- |
-| `npm run dev` | Start the Vite/TanStack Start development server on port 3000 |
-| `npm run build` | Build the client, SSR bundle, and Nitro output |
-| `npm run preview` | Preview the production build locally |
-| `npm run generate-routes` | Regenerate the TanStack Router route tree |
-| `npm run lint` | Run ESLint |
-| `npm run check` | Check Prettier formatting |
-| `npm run format` | Format files and apply ESLint fixes |
-| `npx prisma migrate deploy` | Apply committed migrations |
-| `npx prisma generate` | Regenerate the typed Prisma client |
-| `npx prisma studio` | Open Prisma Studio |
+| Command                     | Purpose                                                       |
+| --------------------------- | ------------------------------------------------------------- |
+| `npm run dev`               | Start the Vite/TanStack Start development server on port 3000 |
+| `npm run build`             | Build the client, SSR bundle, and Nitro output                |
+| `npm run preview`           | Preview the production build locally                          |
+| `npm run generate-routes`   | Regenerate the TanStack Router route tree                     |
+| `npm run lint`              | Run ESLint                                                    |
+| `npm run check`             | Check Prettier formatting                                     |
+| `npm run format`            | Format files and apply ESLint fixes                           |
+| `npx prisma migrate deploy` | Apply committed migrations                                    |
+| `npx prisma generate`       | Regenerate the typed Prisma client                            |
+| `npx prisma studio`         | Open Prisma Studio                                            |
 
 ## Authentication
 
@@ -248,9 +248,9 @@ Located in `src/features/presentation/actions/`:
 
 ### API routes
 
-| Route | Purpose |
-| --- | --- |
-| `/api/auth/*` | Better Auth API and OAuth callbacks |
+| Route          | Purpose                                          |
+| -------------- | ------------------------------------------------ |
+| `/api/auth/*`  | Better Auth API and OAuth callbacks              |
 | `/api/inngest` | Inngest function registration and event delivery |
 
 ## AI Generation Pipeline
